@@ -1,9 +1,11 @@
 from setuptools import setup
 
 INSTALL_REQUIREMENTS = [
-    'sqlalchemy',
+    'flask',
+    'flask-restful',
     'flask-socketio',
-    'flask']
+    'flask-httpauth',
+    'flask-sqlalchemy']
 
 # TESTS_REQUIREMENTS = [
 #     'jsondiff == 1.1.2',
@@ -18,11 +20,11 @@ INSTALL_REQUIREMENTS = [
 # }
 
 setup(
-    name='rpgc-server',
+    name='rpgc_server',
     version='0.1',
     description='RPGChat Server',
     author="Fruktus",
-    packages=['rpgc-server'],
+    packages=['rpgc_server'],
     install_requires=INSTALL_REQUIREMENTS,
     setup_requires=INSTALL_REQUIREMENTS,
     # tests_require=TESTS_REQUIREMENTS,

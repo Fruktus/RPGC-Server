@@ -36,12 +36,16 @@ class HelloWorld(Resource):
 #         return {todo_id: todos[todo_id]}
 
 class AuthDemo(Resource):
-    method_decorators = {'get': [auth.login_required]}  # will apply auth to get
+    # method_decorators = {'get': [auth.login_required]}  # will apply auth to get
 
     def get(self):
         return {'auth': 'ok'}
 
 
+# dynamically modify base class to include the auth method,
+AuthDemo.method_decorators = {'get': [auth.login_required]}
+# c = AuthDemo
+# c.method_decorators = {'get': [auth.login_required]}
 # api.add_resource(TodoSimple, '/<string:todo_id>')
 api.add_resource(HelloWorld, '/', '/hello')
 api.add_resource(AuthDemo, '/auth')
