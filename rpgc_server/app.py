@@ -22,8 +22,11 @@ def verify_password(username, password):
 
 
 class HelloWorld(Resource):
+    counter = 0
+
     def get(self):
-        return {'hello': 'world'}
+        HelloWorld.counter += 1
+        return {'hello': str(HelloWorld.counter)}
 
 
 # todos = {}

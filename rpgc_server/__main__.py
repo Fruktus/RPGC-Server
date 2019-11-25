@@ -1,7 +1,7 @@
-from flask_httpauth import HTTPBasicAuth
-from rpgc_server.tmp.tmp import t1
+from flask import Flask
+from rpgc_server import app
 
-global auth
-auth = HTTPBasicAuth()
 
-t1()
+if __name__ == '__main__':
+    app = Flask(app)
+    app.run()
