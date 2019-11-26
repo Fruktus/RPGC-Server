@@ -7,7 +7,7 @@ app = Flask(__name__)
 api = Api(app)
 
 users = {
-    # "john": generate_password_hash("hello"),
+    # "john": generate_password_hash("hello"), # TODO: hash password!
     "john": "hello",
     "susan": "bye"
 }
@@ -16,6 +16,7 @@ users = {
 @auth.verify_password
 def verify_password(username, password):
     if username in users:
+        # TODO: hash password!
         # return check_password_hash(users.get(username), password)
         return users.get(username) == password
     return False

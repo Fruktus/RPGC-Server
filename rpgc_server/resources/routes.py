@@ -6,12 +6,31 @@ from rpgc_server.resources.models import User, Room, Message, Preset
 # sample handler
 class UserHandler(Resource):
     def get(self):
+        # get user data by uuid
         pass
 
     def put(self):
         pass
 
     def post(self):  # one of those unnecessary i think
+        pass
+
+    def delete(self):
+        pass
+
+
+class RoomHandler(Resource):
+    def get(self):
+        # get room data by uuid
+        # different action when called without parameter (get all)
+        pass
+
+    def put(self):
+        # create
+        pass
+
+    def post(self):
+        # update
         pass
 
     def delete(self):

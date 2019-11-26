@@ -21,7 +21,7 @@ class Room:
     __tablename__ = 'rooms'
 
     id = Column(UUID(as_uuid=True), primary_key=True)
-    owner = Column(String(64),  # FIXME, will not be a string
+    owner = Column(String(64),  # FIXME, will not be a string, figure out how to use foriegnkey
                    index=False,
                    # ForeignKey("user.user_id")  # is most commonly a string of the form <tablename>.<columnname>
                    unique=False,
@@ -71,3 +71,6 @@ class Preset:
     id = Column(Integer, primary_key=True)
     # user id as foreign key
     # data - how preset looks like
+
+
+# TODO separate model for files? models for websockets
