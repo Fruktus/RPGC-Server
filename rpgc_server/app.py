@@ -65,5 +65,5 @@ api.add_resource(AuthDemo, '/auth')
 
 if __name__ == '__main__':
     # app.run()
-    socketio.run(app)
+    socketio.run(app, debug=True)
     # socketio.run(app, host='0.0.0.0', debug=True, keyfile='key.pem', certfile='cert.pem')  # how to ssl

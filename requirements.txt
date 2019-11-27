@@ -3,3 +3,4 @@ flask-restful
 flask-socketio
 flask-httpauth
 flask-sqlalchemy
+eventlet
