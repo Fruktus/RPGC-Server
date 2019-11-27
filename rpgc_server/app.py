@@ -1,10 +1,18 @@
 from flask import Flask, request
 from flask_restful import Resource, Api
 from flask_httpauth import HTTPBasicAuth
+from flask_socketio import SocketIO
 
 auth = HTTPBasicAuth()
 app = Flask(__name__)
+# FIXME: add proper secret key
+app.config['SECRET_KEY'] = 'secret!'
 api = Api(app)
+socketio = SocketIO(app)
+
+# HOWTO: socketio without decorator: socketio.on_event('my event', my_function_handler, namespace='/test')
+# HOWTO: split into rooms: Do and authenticated connection to /channel/{roomId}
+# HOWTO: nvm the above, there is example in docs: https://flask-socketio.readthedocs.io/en/latest/
 
 users = {
     # "john": generate_password_hash("hello"), # TODO: hash password!
@@ -56,4 +64,6 @@ api.add_resource(AuthDemo, '/auth')
 
 
 if __name__ == '__main__':
-    app.run()
+    # app.run()
+    socketio.run(app)
+    # socketio.run(app, host='0.0.0.0', debug=True, keyfile='key.pem', certfile='cert.pem')  # how to ssl

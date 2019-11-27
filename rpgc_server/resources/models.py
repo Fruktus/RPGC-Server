@@ -1,76 +1,68 @@
 """container for all data classes"""
-from sqlalchemy import Column, Integer, String, Boolean
+from sqlalchemy import Column, Integer, String, Boolean, ForeignKey
+from sqlalchemy.orm import relationship
 from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.ext.declarative import declarative_base
 
 # FIXME do note that everything here at the moment is just a draft
 # SELF: look here: https://docs.sqlalchemy.org/en/13/orm/tutorial.html
 # SELF: https://websauna.org/docs/narrative/modelling/models.html#primary-keys-uuid-running-counter-or-both
 # ^ how to enable uuids in postgresql
 
+Base = declarative_base()
 
-class User:
+
+class User(Base):
     __tablename__ = 'users'
 
-    id = Column(UUID(as_uuid=True), primary_key=True)
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    # id = Column(UUID(as_uuid=True), primary_key=True)  # TODO: tmp off to work with inmemory sqlite
     username = Column(String)
-    password = Column(String)  # TODO: should be hashed
+    password = Column(String)  # TODO: should be hash (will be hashed when creating user)
     email = Column(String)
+    rooms_owned = relationship('Room')
+
+    def __repr__(self):
+        return "<User(name='%s', pw='%s', email='%s')>" % (
+            self.username, self.password, self.email)
 
 
-class Room:
+class Room(Base):
     __tablename__ = 'rooms'
 
-    id = Column(UUID(as_uuid=True), primary_key=True)
-    owner = Column(String(64),  # FIXME, will not be a string, figure out how to use foriegnkey
-                   index=False,
-                   # ForeignKey("user.user_id")  # is most commonly a string of the form <tablename>.<columnname>
-                   unique=False,
-                   nullable=False)
+    # FIXME: changed to integer to work with sqlite3
+    # id = Column(UUID(as_uuid=True), primary_key=True)
+    # owner_id = Column(UUID(as_uuid=True), ForeignKey('users.id'))
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    owner_id = Column(Integer, ForeignKey('users.id'))
+    owner = relationship('User', back_populates='rooms_owned')
+    name = Column(String)
     visible = Column(Boolean)
     password = Column(String(30),
                       nullable=True)  # if null then no password required
     # users = array? -> requires additional table connecting rooms and users
 
-# how-to association table:
-# class Actor(Base):
-#     __tablename__ = 'actors'
-#
-#     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-#     name = Column(String)
-#     nickname = Column(String)
-#     academy_awards = Column(Integer)
-#
-# class Movie(Base):
-#     __tablename__ = 'movies'
-#
-#     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-#     title = Column(String)
-#
-#     actors = relationship('ActorMovie', uselist=True, backref='movies')
-#
-# class ActorMovie(Base):
-#     __tablename__ = 'actor_movies'
-#
-#     actor_id = Column(UUID(as_uuid=True), ForeignKey('actors.id'))
-#     movie_id = Column(UUID(as_uuid=True), ForeignKey('movies.id'))
 
-
-class Message:
+class Message(Base):
     __tablename__ = 'messages'
 
-    id = Column(Integer, primary_key=True)
-    # TODO: possibly use uuid or create additional counter field for batch retrieval
-    data = Column(String(100))  # for text 
-    # possibly room id as foreign key
+    # room_id = Column(UUID(as_uuid=True), ForeignKey('rooms.id'))
+    room_id = Column(Integer, ForeignKey('rooms.id'), primary_key=True)  # composite key made from room uuid and serial
+    id = Column(Integer, primary_key=True)  # TODO: use serial/bigserial? also: rename field
+    # author = Column(UUID(as_uuid=True), ForeignKey('users.id'))
+    author = Column(Integer, ForeignKey('users.id'))
+    data = Column(String)  # for text
 
 
-class Preset:
+class Preset(Base):
     # info: this one is for users only, cannot be used directly in message as formatting, you need to use data
     __tablename__ = 'presets'
 
     id = Column(Integer, primary_key=True)
-    # user id as foreign key
-    # data - how preset looks like
+    name = Column(String(64))
+    # user = Column(UUID(as_uuid=True), ForeignKey('users.id'))
+    user = Column(Integer, ForeignKey('users.id'))
+    data = Column(String)
 
 
 # TODO separate model for files? models for websockets
