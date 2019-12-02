@@ -15,6 +15,8 @@ session = Session()  # build class
 
 ed_user = User(username='ed', password='pass', email='ed@uard.o')
 print(ed_user)
+import uuid
+ed_user.id = uuid.uuid4()
 print('ed uuid: ', ed_user.id)
 
 session.add(ed_user)  # added to session, adding to database pending
@@ -23,17 +25,17 @@ our_user = session.query(User).filter_by(username='ed').first()  # retrieveing d
 print(ed_user is our_user)  # true
 
 session.add_all([  # multiple objects at once
-        User(username='wendy', password='Wendy Williams', email='windy'),
-        User(username='mary', password='Mary Contrary', email='mary'),
-        User(username='fred', password='Fred Flintstone', email='freddy')])
+        User(id=uuid.uuid4(), username='wendy', password='Wendy Williams', email='windy'),
+        User(id=uuid.uuid4(), username='mary', password='Mary Contrary', email='mary'),
+        User(id=uuid.uuid4(), username='fred', password='Fred Flintstone', email='freddy')])
 
 
 print(session.dirty)  # shows modified data
 print(session.new)  # shows added data
 
 ed_user.rooms_owned = [
-    Room(name='DnD', visible=True),
-    Room(name='AT', visible=False, password='ark')
+    Room(id=uuid.uuid4(), name='DnD', visible=True),
+    Room(id=uuid.uuid4(), name='AT', visible=False, password='ark')
 ]
 
 session.commit()  # flushes data
