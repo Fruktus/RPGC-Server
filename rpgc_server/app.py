@@ -2,20 +2,26 @@ from flask import Flask, request
 from flask_restful import Resource, Api
 from flask_httpauth import HTTPBasicAuth
 from flask_socketio import SocketIO
+from flask_sqlalchemy import SQLAlchemy  # possibly may not be needed
 
 auth = HTTPBasicAuth()
 app = Flask(__name__)
 # FIXME: add proper secret key
-app.config['SECRET_KEY'] = 'secret!'
+app.config.from_pyfile('config_test.cfg')
+
 api = Api(app)
+db = SQLAlchemy(app)  # https://flask-sqlalchemy.palletsprojects.com/en/2.x/quickstart/
 socketio = SocketIO(app)
 
 # HOWTO: socketio without decorator: socketio.on_event('my event', my_function_handler, namespace='/test')
-# HOWTO: split into rooms: Do and authenticated connection to /channel/{roomId}
+# HOWTO: split into rooms: Do an authenticated connection to /channel/{roomId}
 # HOWTO: nvm the above, there is example in docs: https://flask-socketio.readthedocs.io/en/latest/
+# HOWTO: most likely I'll expose single endpoint, /channel, to which clients will connect passing room as parameter
+# (possibly in every message)
+# socket test: https://blog.miguelgrinberg.com/post/easy-websockets-with-flask-and-gevent
 
 users = {
-    # "john": generate_password_hash("hello"), # TODO: hash password!
+    # "john": generate_password_hash("hello"), # TODO: hash password! FOLLOWUP: db can handle encryption etc, check that
     "john": "hello",
     "susan": "bye"
 }

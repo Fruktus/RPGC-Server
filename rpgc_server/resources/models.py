@@ -5,6 +5,7 @@ from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy_utils import UUIDType
 from sqlalchemy.ext.declarative import declarative_base
 
+
 # FIXME do note that everything here at the moment is just a draft
 # SELF: look here: https://docs.sqlalchemy.org/en/13/orm/tutorial.html
 # SELF: https://websauna.org/docs/narrative/modelling/models.html#primary-keys-uuid-running-counter-or-both
@@ -19,7 +20,9 @@ class User(Base):
 
     id = Column(UUIDType(), primary_key=True)
     username = Column(String)
-    password = Column(String)  # TODO: should be hash (will be hashed when creating user)
+    password = Column(String)
+    # TODO: password should be hash (will be hashed when creating user)
+    # check here: https://sqlalchemy-utils.readthedocs.io/en/latest/data_types.html#module-sqlalchemy_utils.types.encrypted.encrypted_type
     email = Column(String)
     rooms_owned = relationship('Room')
 
