@@ -19,6 +19,8 @@ socketio = SocketIO(app)
 # HOWTO: most likely I'll expose single endpoint, /channel, to which clients will connect passing room as parameter
 # (possibly in every message)
 # socket test: https://blog.miguelgrinberg.com/post/easy-websockets-with-flask-and-gevent
+# input validation opt1: https://chrisalbon.com/python/basics/compare_two_dictionaries/
+# opt2: https://flask-marshmallow.readthedocs.io/en/latest/
 
 users = {
     # "john": generate_password_hash("hello"), # TODO: hash password! FOLLOWUP: db can handle encryption etc, check that
@@ -71,5 +73,5 @@ api.add_resource(AuthDemo, '/auth')
 
 if __name__ == '__main__':
     # app.run()
-    socketio.run(app, debug=True)
+    socketio.run(app)
     # socketio.run(app, host='0.0.0.0', debug=True, keyfile='key.pem', certfile='cert.pem')  # how to ssl

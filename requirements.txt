@@ -3,5 +3,6 @@ flask-restful
 flask-socketio
 flask-httpauth
 flask-sqlalchemy
+marshmallow
 sqlalchemy-utils
 eventlet
