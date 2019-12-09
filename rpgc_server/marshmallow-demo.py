@@ -17,3 +17,6 @@ except ValidationError as err:
 print(UserSchema().validate({"name": "Ronnie", "email": "asd@asd.com"}))
 print(UserSchema().validate({"name": "Ronnie"}))
 print(UserSchema().validate({"name": "Ronnie", "email": "invalid-email"}))
+
+# json_res = schema.dumps()
+# from_json = schema.loads(json)

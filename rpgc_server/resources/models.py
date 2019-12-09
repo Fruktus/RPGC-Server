@@ -1,5 +1,6 @@
 """container for all data classes"""
-from sqlalchemy import Column, Integer, String, Boolean, ForeignKey
+import datetime
+from sqlalchemy import Column, Integer, String, Boolean, ForeignKey, DateTime
 from sqlalchemy.orm import relationship
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy_utils import UUIDType
@@ -23,6 +24,7 @@ class User(Base):
     password = Column(String)
     # TODO: password should be hash (will be hashed when creating user)
     # check here: https://sqlalchemy-utils.readthedocs.io/en/latest/data_types.html#module-sqlalchemy_utils.types.encrypted.encrypted_type
+    created_date = Column(DateTime, default=datetime.datetime.utcnow)
     email = Column(String)
     rooms_owned = relationship('Room')
 
@@ -35,12 +37,11 @@ class Room(Base):
     __tablename__ = 'rooms'
 
     id = Column(UUIDType(), primary_key=True)
-    owner_id = Column(UUIDType(), ForeignKey('users.id'))
+    owner_id = Column(UUIDType(), ForeignKey('users.id'))  # FIXME why are there two of these?
     owner = relationship('User', back_populates='rooms_owned')
     name = Column(String)
     visible = Column(Boolean)
-    password = Column(String(30),
-                      nullable=True)  # if null then no password required
+    password = Column(String(30), nullable=True)  # if null then no password required
     # users = array? -> requires additional table connecting rooms and users
 
 
@@ -58,9 +59,9 @@ class Preset(Base):
     __tablename__ = 'presets'
 
     id = Column(Integer, primary_key=True)
+    user = Column(Integer, ForeignKey('users.id'))
     name = Column(String(64))
     # user = Column(UUID(as_uuid=True), ForeignKey('users.id'))
-    user = Column(Integer, ForeignKey('users.id'))
     data = Column(String)
 
 
