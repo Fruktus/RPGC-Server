@@ -1,5 +1,5 @@
 from marshmallow import fields, Schema
-
+# these are all definitions for REST api calls, what fields are required, how are they structured, etc.
 
 # how to validate condition "at least one required (other than id):
 # https://marshmallow.readthedocs.io/en/latest/api_reference.html#marshmallow.decorators.validates_schema

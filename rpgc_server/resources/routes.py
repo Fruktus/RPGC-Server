@@ -1,15 +1,36 @@
 """contains classes with REST handlers for data units"""
 from flask_restful import Resource
+from marshmallow import ValidationError
+
 from rpgc_server.resources.models import User, Room, Message, Preset
+
+from rpgc_server.resources.user_forms import UserGetSchema
 
 
 # sample handler
+
+
 class UserHandler(Resource):
     def get(self):
-        # get user data by uuid
+        # try:
+        #     # get user data by uuid
+        #     # TODO idk how to retrieve data from db at the moment, replace the dict with call to db
+        #     return UserGetSchema().load({"name": "Ronnie", "email": "invalid"})
+        # except ValidationError as err:
+        #     # TODO return some html like missing param or smth
+        #     print(err.messages)
+        #     print(err.valid_data)
+        #     return 422  # unprocessable entity - server understood the request but cannot process it
+        # ^ unnecessary, the users will be exposed as endpoint, so no need to authenticate additionaly
         pass
 
     def put(self):
+        # user_schema = UserSchema()
+        # try:
+        #     user = UserSchema().load({"name": "Ronnie", "email": "invalid"})
+        # except ValidationError as err:
+        #     print(err.messages)
+        #     print(err.valid_data)
         pass
 
     def post(self):  # one of those unnecessary i think
@@ -23,7 +44,11 @@ class RoomHandler(Resource):
     def get(self):
         # get room data by uuid
         # different action when called without parameter (get all)
-        pass
+        return "it works! RoomHandler"
+
+    def get_my(self):
+        # just a test for binding to specific sub-url
+        return "it works! custom endpoint RoomHandler"
 
     def put(self):
         # create
