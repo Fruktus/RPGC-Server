@@ -1,6 +1,5 @@
 sqlalchemy
 flask
-flask-restful
 flask-socketio
 flask-httpauth
 flask-sqlalchemy
