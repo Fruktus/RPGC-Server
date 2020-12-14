@@ -1,42 +1,38 @@
-"""contains classes for websocket rooms"""
-from flask_socketio import join_room, leave_room, send
+from flask import session
+from flask_socketio import emit, join_room, leave_room
+
+from rpgc_server import socketio
 
 
-# SAMPLES:
-# @socketio.on('join')  # will be added in main file
-def on_join(data):
-    username = data['username']
-    room = data['room']
-    join_room(room)
-    send(username + ' has entered the room.', room=room)
-
-
-# @socketio.on('leave')
-def on_leave(data):
-    username = data['username']
-    room = data['room']
-    leave_room(room)
-    send(username + ' has left the room.', room=room)
-
-
-# @socketio.on('message')
+@socketio.on('message')
 def handle_message(message):
     print('received message: ' + message)
 
 
-# @socketio.on('json')
-def handle_json(json):
-    print('received json: ' + str(json))
-    send(json, json=True, namespace='/chat')  # bounces back json
+@socketio.on('joined', namespace='/chat')
+def joined(message):
+    """Sent by clients when they enter a room.
+    A status message is broadcast to all people in the room."""
+    room = session.get('room')
+    print('joined')
+    join_room(room)
+    emit('status', {'msg': session.get('name') + ' has entered the room.'}, room=room)
 
 
-# @socketio.on('my event')
-def handle_my_custom_event(arg1, arg2, arg3):
-    print('received args: ' + arg1 + arg2 + arg3)
-    return 'one', 2  # will be sent back through callback as parameters
+@socketio.on('text', namespace='/chat')
+def text(message):
+    """Sent by a client when the user entered a new message.
+    The message is sent to all people in the room."""
+    room = session.get('room')
+    print('text:', message)
+    emit('message', {'msg': session.get('name') + ':' + message['msg']}, room=room)
 
 
-# @socketio.on('my event', namespace='/test')
-def handle_my_custom_namespace_event(json):
-    print('received json: ' + str(json))
-
+@socketio.on('left', namespace='/chat')
+def left(message):
+    """Sent by clients when they leave a room.
+    A status message is broadcast to all people in the room."""
+    room = session.get('room')
+    leave_room(room)
+    print('leaving')
+    emit('status', {'msg': session.get('name') + ' has left the room.'}, room=room)
