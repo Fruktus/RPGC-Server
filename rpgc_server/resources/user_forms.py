@@ -5,7 +5,7 @@ from marshmallow import fields, Schema
 # https://marshmallow.readthedocs.io/en/latest/api_reference.html#marshmallow.decorators.validates_schema
 
 
-# INFO: those are user-submitted responses, database will return different ones
+# INFO: those schemas are for validating user-submitted responses, database will return different ones
 # FIXME: Circular dependency
 class UserGetSchema(Schema):
     id = fields.UUID(required=True)
@@ -23,6 +23,7 @@ class UserPostSchema(Schema):
 
 class UserPutSchema(Schema):
     id = fields.UUID(required=True)  # you must supply uuid for the user you wish to modify
+    # TODO ^ obtained from auth, possibly unnecessary
     username = fields.Str()
     password = fields.Str(load_only=True)
     email = fields.Email()
@@ -42,7 +43,7 @@ class RoomGetSchema(Schema):
 
 
 class RoomPostSchema(Schema):
-    owner_id = fields.Nested(UserGetSchema, required=True)  # TODO: just return uuid, not full nested user
+    owner_id = fields.UUID(required=True) # TODO: just return uuid, not full nested user
     # owner = relationship('User', back_populates='rooms_owned')  # IDK why there is two of them
     name = fields.Str(required=True)
     visible = fields.Boolean(required=True)

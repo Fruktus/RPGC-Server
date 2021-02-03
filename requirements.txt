@@ -1,8 +1,10 @@
-flask
+flask~=1.1.2
 flask-restful
 flask-socketio
 flask-httpauth
 flask-sqlalchemy
-marshmallow
+marshmallow~=3.9.0
 sqlalchemy-utils
 eventlet
+SQLAlchemy~=1.3.20
+flask_monitoringdashboard
