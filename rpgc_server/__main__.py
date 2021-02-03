@@ -44,6 +44,5 @@ if __name__ == "__main__":
     from rpgc_server import socketio
     from rpgc_server.resources.wshandlers import handle_message
 
-
     socketio.init_app(app)
     app.run()

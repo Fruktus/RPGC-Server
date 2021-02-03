@@ -12,7 +12,7 @@ from flask_socketio import SocketIO
 if not isdir('log'):
     mkdir('log')
 lg.basicConfig( # filename=join('log', 'server.log'),
-               format='[{asctime}] {pathname:<20}:{lineno} {levelname:10s} {message}', style='{',
+               format='[{asctime}] {name:<10s}:{lineno:<4d} {levelname:10s} {message}', style='{',
                level=lg.DEBUG)
 
 

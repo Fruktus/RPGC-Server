@@ -12,7 +12,7 @@
 	get_my
 	get_joined
 
-	<id pokoju>/messages/<id wiadomosci>
+	<roomid>/messages/<messageid>
 
 
 /messages
@@ -20,9 +20,9 @@
 /files/<uuid>
 
 baza:
-	uuid: właściciel, pokój, nazwa, path
+	uuid: owner, room, name, path
 
-sprawdzić czy da się wysłać plik ze zmienioną nazwą
+check whether possible to upload file with changed name
 
 ## setting up postgres:
 create database rpgc_test;
