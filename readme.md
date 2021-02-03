@@ -1,5 +1,5 @@
 # RPGC-Server [![version](https://img.shields.io/badge/version-pre--alpha-red)]()
-Server part of RPGChat project.
+Server part of RPGChat project, client available [here](https://github.com/Fruktus/RPGC-Client).
 
 ## Installation and running
 Project was tested with Python3.8. Install requirements ```python3 -m pip install -r requirements.txt```,
