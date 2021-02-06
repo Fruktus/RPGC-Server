@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask
 from flask_restful import Resource, Api
 from flask_httpauth import HTTPBasicAuth
 from flask_socketio import SocketIO
