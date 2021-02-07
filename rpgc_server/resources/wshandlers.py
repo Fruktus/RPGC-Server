@@ -1,38 +1,37 @@
-from flask import session
-from flask_socketio import emit, join_room, leave_room
+import gevent
+from geventwebsocket import WebSocketError
 
-from rpgc_server import socketio
-
-
-@socketio.on('message')
-def handle_message(message):
-    print('received message: ' + message)
+from rpgc_server import sockets, app, redis_instance, REDIS_CHAN, chats
 
 
-@socketio.on('joined', namespace='/chat')
-def joined(message):
-    """Sent by clients when they enter a room.
-    A status message is broadcast to all people in the room."""
-    room = session.get('room')
-    print('joined')
-    join_room(room)
-    emit('status', {'msg': session.get('name') + ' has entered the room.'}, room=room)
+@sockets.route('/echo')
+def echo_socket(ws):
+    try:
+        while not ws.closed:
+            message = ws.receive()
+            ws.send(message)
+    except WebSocketError:
+        pass
 
 
-@socketio.on('text', namespace='/chat')
-def text(message):
-    """Sent by a client when the user entered a new message.
-    The message is sent to all people in the room."""
-    room = session.get('room')
-    print('text:', message)
-    emit('message', {'msg': session.get('name') + ':' + message['msg']}, room=room)
+@sockets.route('/submit')
+def inbox(ws):
+    """Receives incoming chat messages, inserts them into Redis."""
+    while not ws.closed:
+        # Sleep to prevent *contstant* context-switches.
+        gevent.sleep(0.1)
+        message = ws.receive()
+
+        if message:
+            app.logger.info(u'Inserting message: {}'.format(message))
+            redis_instance.publish(REDIS_CHAN, message)
 
 
-@socketio.on('left', namespace='/chat')
-def left(message):
-    """Sent by clients when they leave a room.
-    A status message is broadcast to all people in the room."""
-    room = session.get('room')
-    leave_room(room)
-    print('leaving')
-    emit('status', {'msg': session.get('name') + ' has left the room.'}, room=room)
+@sockets.route('/receive')
+def outbox(ws):
+    """Sends outgoing chat messages, via `ChatBackend`."""
+    chats.register(ws)
+
+    while not ws.closed:
+        # Context switch while `ChatBackend.start` is running in the background.
+        gevent.sleep(0.1)

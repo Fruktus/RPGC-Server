@@ -1,10 +1,12 @@
 from flask import Blueprint, jsonify, request
+import logging
 from marshmallow import ValidationError
 
 from rpgc_server import db
 from rpgc_server.resources.dbmodels import Room
 from rpgc_server.resources.user_forms import RoomPostSchema
 
+log = logging.getLogger('room_handler')
 RoomHandler = Blueprint('rooms', __name__)
 
 
@@ -14,6 +16,7 @@ def get_room(room_id: str):
     try:
         return jsonify(Room.query.get(room_id))
     except Exception as e:  # TODO replace with proper exception handling (specific exception)
+        log.warning(str(e))
         return 400
 
 
@@ -24,6 +27,7 @@ def get_visible_rooms(room_id: str):
 
         return jsonify(Room.query.filter(Room.visible))
     except Exception as e:  # TODO replace with proper exception handling (specific exception)
+        log.warning(str(e))
         return 400
 
 
@@ -36,6 +40,7 @@ def get_my_rooms():
     try:
         return jsonify(Room.query.filter(Room.owner_id == user_id))  # check whether "in" works
     except Exception as e:  # TODO replace with proper exception handling (specific exception)
+        log.warning(str(e))
         return 400
 
 
@@ -49,6 +54,7 @@ def get_joined_rooms():
         return jsonify(Room.query.filter(Room.owner_id == user_id or user_id in Room.users))  # TODO
         # replace with proper fetching (currently code is a placeholder)
     except Exception as e:  # TODO replace with proper exception handling (specific exception)
+        log.warning(str(e))
         return 400
 
 
@@ -68,9 +74,10 @@ def create_room():
         db.session.add(room)
         db.session.commit()
         return jsonify(room), 201
-    except ValidationError as err:
-        print('zepsules', err.messages)
-        print(err.valid_data)
+    except ValidationError as e:
+        log.warning(str(e))
+        print('zepsules', e.messages)
+        print(e.valid_data)
 
 
 @RoomHandler.route('/<room_id>', methods=["PUT"])
