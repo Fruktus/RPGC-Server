@@ -1,10 +1,12 @@
 from flask import Blueprint, request, jsonify
+import logging
 from marshmallow import ValidationError
 
 from rpgc_server import db
 from rpgc_server.resources.dbmodels import User
 from rpgc_server.resources.user_forms import UserPostSchema
 
+log = logging.getLogger('user_handler')
 UserHandler = Blueprint('users', __name__)
 
 
@@ -34,6 +36,7 @@ def get_user(user_id):
     try:
         return jsonify(User.query.get(user_id))
     except Exception as e:  # TODO replace with proper exception handling (specific exception)
+        log.warning(str(e))
         return 400
 
 
