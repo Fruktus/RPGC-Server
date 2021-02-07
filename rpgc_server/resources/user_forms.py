@@ -43,7 +43,7 @@ class RoomGetSchema(Schema):
 
 
 class RoomPostSchema(Schema):
-    owner_id = fields.UUID(required=True) # TODO: just return uuid, not full nested user
+    owner_id = fields.UUID(required=True)  # TODO: just return uuid, not full nested user
     # owner = relationship('User', back_populates='rooms_owned')  # IDK why there is two of them
     name = fields.Str(required=True)
     visible = fields.Boolean(required=True)

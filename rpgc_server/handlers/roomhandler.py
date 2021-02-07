@@ -46,7 +46,8 @@ def get_joined_rooms():
     user_id = None  # auth.current_user()  # FIXME check, implement
 
     try:
-        return jsonify(Room.query.filter(Room.owner_id == user_id or user_id in Room.users))  # TODO replace with proper fetching (currently code is a placeholder)
+        return jsonify(Room.query.filter(Room.owner_id == user_id or user_id in Room.users))  # TODO
+        # replace with proper fetching (currently code is a placeholder)
     except Exception as e:  # TODO replace with proper exception handling (specific exception)
         return 400
 
