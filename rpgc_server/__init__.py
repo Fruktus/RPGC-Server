@@ -32,11 +32,11 @@ dashboard.bind(app)
 db = SQLAlchemy(app)
 auth = HTTPBasicAuth()
 sockets = Sockets(app)
-chats = ChatBackend()
 
 REDIS_URL = environ['REDIS_URL']
 REDIS_CHAN = 'chat'
-
 redis_instance = redis.from_url(REDIS_URL)
+
+chats = ChatBackend(redis_instance, REDIS_CHAN)
 
 # migrate = Migrate(app, db)  # TODO for later maybe

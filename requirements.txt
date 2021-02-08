@@ -10,3 +10,4 @@ SQLAlchemy~=1.3.20
 flask_monitoringdashboard
 redis~=3.5.3
 gevent~=21.1.2
+gevent-websocket

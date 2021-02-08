@@ -1,18 +1,16 @@
 import logging
 import gevent
 
-from rpgc_server import redis_instance, REDIS_CHAN
-
 log = logging.getLogger('chat-backend')
 
 
 class ChatBackend(object):
     """Interface for registering and updating WebSocket clients."""
 
-    def __init__(self):
+    def __init__(self, redis_instance, redis_chan):
         self.clients = list()
         self.pubsub = redis_instance.pubsub()
-        self.pubsub.subscribe(REDIS_CHAN)
+        self.pubsub.subscribe(redis_chan)
 
     def __iter_data(self):
         for message in self.pubsub.listen():
